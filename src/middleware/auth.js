@@ -12,7 +12,7 @@ if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
 if(!token){
     return res.status(401).json({
         success:false,
-        message:'Unauthorized'
+        message:'Unauthorized, Token Expired.'
     })
 }
 
@@ -28,8 +28,6 @@ if(!req.user){
 }
 
 next();
-
-
 
 }catch(e){
 return res.status(401).json({

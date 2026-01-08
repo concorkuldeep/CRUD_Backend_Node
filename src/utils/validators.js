@@ -12,7 +12,10 @@ const registerValidator = [
     .normalizeEmail(),
   
   body('password')
-    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
+    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+
+    body('phone')
+    .isLength({max:10}).withMessage('Phone no should be atleast 10 digits')
 ];
 
 const loginValidator = [

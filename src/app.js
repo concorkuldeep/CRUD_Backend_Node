@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 
-const authRoutes = require('./routes/authRoutes')
-
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes')
 const app = express();
 
 app.use(helmet());
@@ -25,6 +25,7 @@ app.get('/', (req,res)=>{
 
 
 app.use('/api/auth',authRoutes)
+app.use('/api/user',userRoutes)
 
 // 404 handler
 app.use((req, res, next) => {

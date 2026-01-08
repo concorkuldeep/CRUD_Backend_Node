@@ -11,7 +11,7 @@ const register = async (req, res) => {
         name,
         email,
         password,
-        phone
+        phone,
       });
       
       return successResponse(res, 201, 'User registered successfully', result);
@@ -42,6 +42,7 @@ const register = async (req, res) => {
           id: user._id,
           name: user.name,
           email: user.email,
+          phone:user.phone,
           createdAt: user.createdAt
         }
       });
@@ -49,9 +50,21 @@ const register = async (req, res) => {
       return errorResponse(res, 500, 'Server error');
     }
   };
+
+  const refreshToken = async(req,res) =>{
+try {
+
+  const {refreshToken} = req.body;
+  const accessToken = await authService.refreshAccessToken(refreshToken);
+   return successResponse(res,200,'Token Refreshed Successfully',accessToken)
+} catch (error) {
+  return errorResponse(res,500,'Server Error')
+}
+  }
   
   module.exports = {
     register,
     login,
-    getProfile
+    getProfile,
+    refreshToken
   };

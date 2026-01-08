@@ -9,5 +9,6 @@ router.post('/register', validate(registerValidator),authController.register);
 router.post('/login',validate(loginValidator),authController.login)
 
 router.get('/profile',protect,authController.getProfile)
+router.post('/refreshToken',authController.refreshToken)
 
 module.exports = router;
