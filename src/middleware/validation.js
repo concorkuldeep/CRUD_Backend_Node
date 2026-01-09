@@ -12,6 +12,7 @@ const validate = (validations) =>{
         }
         res.status(400).json({
             success:false,
+            status:400,
             message:errors.array()
         })
     }

@@ -5,13 +5,14 @@ const { successResponse, errorResponse } = require('../utils/responses')
 
 const register = async (req, res) => {
     try {
-      const { name, email, password,phone } = req.body;
+      const { name, email, password,phone,role } = req.body;
       
       const result = await authService.registerUser({
         name,
         email,
         password,
         phone,
+        role
       });
       
       return successResponse(res, 201, 'User registered successfully', result);
@@ -43,7 +44,8 @@ const register = async (req, res) => {
           name: user.name,
           email: user.email,
           phone:user.phone,
-          createdAt: user.createdAt
+          createdAt: user.createdAt,
+          role:user.role
         }
       });
     } catch (error) {
@@ -61,10 +63,19 @@ try {
   return errorResponse(res,500,'Server Error')
 }
   }
+
+  const logOutHandler = async(req,res) =>{
+  const {email} = req.body;
+  const response = await authService.logoutUser(email);
+  if(response){
+    successResponse(res,200, 'User Logged out successfully.')
+  }
+  }
   
   module.exports = {
     register,
     login,
     getProfile,
-    refreshToken
+    refreshToken,
+    logOutHandler
   };

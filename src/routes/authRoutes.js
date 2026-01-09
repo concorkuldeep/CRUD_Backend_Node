@@ -10,5 +10,6 @@ router.post('/login',validate(loginValidator),authController.login)
 
 router.get('/profile',protect,authController.getProfile)
 router.post('/refreshToken',authController.refreshToken)
+router.post('/logout',authController.logOutHandler)
 
 module.exports = router;

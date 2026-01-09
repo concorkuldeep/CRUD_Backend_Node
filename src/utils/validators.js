@@ -15,7 +15,10 @@ const registerValidator = [
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
 
     body('phone')
-    .isLength({max:10}).withMessage('Phone no should be atleast 10 digits')
+    .isLength({max:10}).withMessage('Phone no should be atleast 10 digits'),
+    body('role')
+    .notEmpty().withMessage('Role is required')
+    .trim(),
 ];
 
 const loginValidator = [

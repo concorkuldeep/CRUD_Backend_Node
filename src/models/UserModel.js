@@ -20,8 +20,8 @@ const UserSchema = new mongoose.Schema({
   },
   phone: {
     type: Number,
-    minlength: [10, `Phoine Number should be atleast of 10 digit`],
-    maxlength: [10, `Phoine Number can't be greater than 10 digit`]
+    minlength: [10, `Phone Number should be atleast of 10 digit`],
+    maxlength: [10, `Phone Number can't be greater than 10 digit`]
 
   },
   password: {
@@ -38,6 +38,11 @@ const UserSchema = new mongoose.Schema({
     type:String,
     default:null,
     select:false
+  },
+  role:{
+    type:String,
+    default:null,
+
   }
 })
 

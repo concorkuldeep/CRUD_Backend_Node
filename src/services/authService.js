@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/UserModel');
 const { refreshToken } = require('../controllers/authController');
 
-const generateToken = async(userId) => {
+const generateToken = async (userId) => {
     return jwt.sign({
         id: userId
     }, process.env.JWT_SECRET,
@@ -10,7 +10,7 @@ const generateToken = async(userId) => {
 
 }
 
-const generateRefreshToken = async(userId) => {
+const generateRefreshToken = async (userId) => {
     return jwt.sign({
         id: userId
     }, process.env.JWT_SECRET, {
@@ -18,30 +18,30 @@ const generateRefreshToken = async(userId) => {
     })
 }
 
-const refreshAccessToken = async(oldToken)=>{
-if(!oldToken){
-    throw new Error('Refresh Token Required.')
-}
+const refreshAccessToken = async (oldToken) => {
+    if (!oldToken) {
+        throw new Error('Refresh Token Required.')
+    }
 
-const decoded = jwt.verify(
-    oldToken,
-    process.env.JWT_SECRET
-)
-const user = await User.findById(decoded.id).select('+refreshToken')
-if(user.refreshToken !== oldToken ){
-    throw new Error('Token reuse detected')
-}
+    const decoded = jwt.verify(
+        oldToken,
+        process.env.JWT_SECRET
+    )
+    const user = await User.findById(decoded.id).select('+refreshToken')
+    if (user.refreshToken !== oldToken) {
+        throw new Error('Token reuse detected')
+    }
 
-const newRefreshToken = await generateRefreshToken(user._id);
+    const newRefreshToken = await generateRefreshToken(user._id);
 
-user.refreshToken = newRefreshToken;
-await user.save()
+    user.refreshToken = newRefreshToken;
+    await user.save()
 
 
-return {
-    accessToken: await generateToken(user._id),
-    refreshToken:newRefreshToken
-}
+    return {
+        accessToken: await generateToken(user._id),
+        refreshToken: newRefreshToken
+    }
 
 }
 
@@ -60,15 +60,14 @@ const registerUser = async (userData) => {
     }
 
     const user = await User.create(userData);
-    const token = generateToken(user._id)
     return {
         user: {
             id: user._id,
             name: user.name,
             email: user.email,
-            phone: user.phone
+            phone: user.phone,
+            role:user.role
         },
-        token
     }
 
 }
@@ -90,7 +89,8 @@ const loginUser = async (email, password) => {
         user: {
             id: user._id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            role:user.role
         },
         token,
         refreshToken
@@ -98,11 +98,27 @@ const loginUser = async (email, password) => {
 
 }
 
+const logoutUser = async (email) => {
+    const user = await User.findOne({ email }).select('+password +refreshToken');
+    if (!user) {
+        throw new Error('Invalid User Email');
+    }
+    if (user.refreshToken) {
+        user.refreshToken = null;
+        await user.save();
+
+    }
+
+    return true;
+
+
+}
 module.exports = {
     generateToken,
     generateRefreshToken,
     verifyToken,
     registerUser,
     loginUser,
-    refreshAccessToken
+    refreshAccessToken,
+    logoutUser
 }
