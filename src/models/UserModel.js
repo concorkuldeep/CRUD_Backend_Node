@@ -26,22 +26,37 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Please provide password'],
+    // required: [true, 'Please provide password'],
     minlength: [6, `Password must be atleast 6 characters`],
     select: false
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  profileImage: {
+    type: String,
+    default: null
+  },
+
+  authProvider: {
+    type: String,
+    enum: ['local', 'google'],
+    default: 'local'
   },
   createdAt: {
     type: Date,
     default: Date.now
   },
-  refreshToken:{
-    type:String,
-    default:null,
-    select:false
+  refreshToken: {
+    type: String,
+    default: null,
+    select: false
   },
-  role:{
-    type:String,
-    default:null,
+  role: {
+    type: String,
+    default: null,
 
   }
 })
